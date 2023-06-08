@@ -3,8 +3,9 @@ import { OnLoadResult } from 'bun';
 import { readFile, stat } from 'fs/promises';
 import { CompileOptions, compile } from 'svelte/compiler';
 import { basename } from 'path';
+import { assert } from 'console';
 
-export interface SveltePluginOptions {
+export type SveltePluginOptions = Partial<{
 	// /**
 	//  * The directory to store cached Svelte components.
 	//  *
@@ -47,16 +48,18 @@ export interface SveltePluginOptions {
 	 * The regular expression to match Svelte components.
 	 */
 	include: RegExp;
-}
+}>;
 
-export default function sveltePlugin({
-	compileOptions,
-	include = /\.svelte$/,
-}: Partial<SveltePluginOptions>): BunPlugin {
+export default function sveltePlugin(options: SveltePluginOptions = {}): BunPlugin {
+	const {
+		compileOptions = {},
+		include = /\.svelte$/,
+	} = options;
+
 	return {
-		name: 'bun-plugin-svelte',
+		name: 'svelte',
 		setup(build: PluginBuilder) {
-			build.onLoad({ filter: include }, async ({ loader, namespace, path }) => {
+			build.onLoad({ filter: include! }, async ({ loader, namespace, path }) => {
 				// const metadata = await stat(path);
 
 				const defaultCompileOptions: CompileOptions = {
@@ -97,6 +100,10 @@ export default function sveltePlugin({
 					const cssURL = build.config.sourcemap === 'inline' ? css.map.toUrl() : `${path}.css.map`;
 					css.code += `\n/*# sourceMappingURL=${cssURL} */`;
 				}
+
+				assert(typeof js === 'object')
+				assert(typeof js.code === 'string')
+
 
 				return {
 					contents: js.code,

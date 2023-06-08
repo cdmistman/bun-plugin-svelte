@@ -1,2 +1,4 @@
-/.devenv
-/node_modules
+/.devenv/
+/node_modules/
+
+**/.build/
