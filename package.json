@@ -1,5 +1,5 @@
 {
-  "name": "bun-svelte-adapter",
+  "name": "bun-plugin-svelte",
   "module": "src/index.ts",
   "type": "module",
   "devDependencies": {
