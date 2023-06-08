@@ -23,6 +23,8 @@
 
       perSystem = { pkgs, system, ... }: {
         devenv.shells.default = {
+					env.node = "${pkgs.bun}/bin/bun";
+
           languages.javascript = {
             enable = true;
             package = pkgs.bun;
